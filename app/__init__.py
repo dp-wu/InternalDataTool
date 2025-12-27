@@ -40,4 +40,21 @@ def create_app(config_class=Config):
     login_manager.login_message_category = 'info'  # 设置登录消息的类别
 
     # 注册蓝图，将不同模块的路由组织起来（先创建蓝图对象，再注册）
-    #
+    from app.routes.main import main_bp
+    from app.routes.auth import auth_bp
+    from app.routes.query import query_bp
+    app.register_blueprint(main_bp)
+    app.register_blueprint(auth_bp, url_prefix='/auth')  # 认证相关路
+    app.register_blueprint(query_bp, url_prefix='/query')  # 查询相关路由
+
+    # 在应用上下文中，确保所有模型被导入， 以便SQLALCHEMY_MIGRATE命令能找到它们
+    with app.app_context():
+        from app import models  # 导入模型模块，确保模型存在并被注册
+        # db.create_all()  # 创建所有数据库表(如果它们不存在的话),deepseek推荐使用flask db upgrade来创建所有表
+
+    return app
+
+
+# deepseek 说celery的导入必须放在create_app函数之后，否则会报错
+from app import tasks  # 导入任务模块，确保celery任务被注册
+# 后面会配置tasks.py文件，定义异步任务
