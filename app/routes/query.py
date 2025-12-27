@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template
 
 
-bp = Blueprint('query', __name__)
+query_bp = Blueprint('query', __name__)
 
-@bp.route('/')
+@query_bp.route('/')
 def index():
     return 'Query Page'

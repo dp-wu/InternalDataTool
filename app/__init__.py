@@ -30,9 +30,9 @@ def create_app(config_class=Config):
     celery.conf.update(app.config)
 
     # 初始化其它扩展，绑定flask应用实例
-    db.init_app(app)
-    migrate.init_app(app, db)
-    login_manager.init_app(app)
+    # db.init_app(app)
+    # migrate.init_app(app, db)
+    # login_manager.init_app(app)
 
     # 配置登录管理器
     login_manager.login_view = 'auth.login'  # 设置登录视图的端点
@@ -44,8 +44,8 @@ def create_app(config_class=Config):
     from app.routes.auth import auth_bp
     from app.routes.query import query_bp
     app.register_blueprint(main_bp)
-    app.register_blueprint(auth_bp, url_prefix='/auth')  # 认证相关路
-    app.register_blueprint(query_bp, url_prefix='/query')  # 查询相关路由
+    app.register_blueprint(auth_bp, url_prefix='/auth') # 认证相关路
+    app.register_blueprint(query_bp, url_prefix='/query') # 查询相关路由
 
     # 在应用上下文中，确保所有模型被导入， 以便SQLALCHEMY_MIGRATE命令能找到它们
     with app.app_context():
@@ -56,5 +56,5 @@ def create_app(config_class=Config):
 
 
 # deepseek 说celery的导入必须放在create_app函数之后，否则会报错
-from app import tasks  # 导入任务模块，确保celery任务被注册
+# from app import tasks  # 导入任务模块，确保celery任务被注册
 # 后面会配置tasks.py文件，定义异步任务
