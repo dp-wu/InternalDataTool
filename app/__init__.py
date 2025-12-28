@@ -30,9 +30,9 @@ def create_app(config_class=Config):
     celery.conf.update(app.config)
 
     # 初始化其它扩展，绑定flask应用实例
-    # db.init_app(app)
-    # migrate.init_app(app, db)
-    # login_manager.init_app(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login_manager.init_app(app)
 
     # 配置登录管理器
     login_manager.login_view = 'auth.login'  # 设置登录视图的端点
